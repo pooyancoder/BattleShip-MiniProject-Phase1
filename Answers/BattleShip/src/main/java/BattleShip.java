@@ -67,6 +67,7 @@ public class BattleShip {
      */
     static void initializeGrid(char[][] grid) {
         //todo
+        //comment...
     }
 
     /**
