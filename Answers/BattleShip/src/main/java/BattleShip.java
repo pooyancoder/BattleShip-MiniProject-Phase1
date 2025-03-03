@@ -43,17 +43,20 @@ public class BattleShip {
 
         // Variable to track whose turn it is
         boolean player1Turn = true;
+        String p1g="";
+        String p2g="";
+
 
         // Main game loop, runs until one player's ships are all sunk
         while (!isGameOver()) {
             if (player1Turn) {
                 System.out.println("Player 1's turn:");
                 printGrid(player1TrackingGrid);
-                playerTurn(player2Grid, player1TrackingGrid);
+                playerTurn(player2Grid, player1TrackingGrid,p1g,1);
             } else {
                 System.out.println("Player 2's turn:");
                 printGrid(player2TrackingGrid);
-                playerTurn(player1Grid, player2TrackingGrid);
+                playerTurn(player1Grid, player2TrackingGrid,p2g,2);
             }
             player1Turn = !player1Turn;
         }
@@ -158,8 +161,47 @@ public class BattleShip {
      @param opponentGrid The opponent's grid to attack.
      @param trackingGrid The player's tracking grid to update.
      */
-    static void playerTurn(char[][] opponentGrid, char[][] trackingGrid) {
+    static void playerTurn(char[][] opponentGrid, char[][] trackingGrid,String give, int player) {
         //todo
+        System.out.println("enter a new cell for the fire");
+        boolean played = false;
+        do {
+            boolean valid = false;
+            String cell = scanner.next();
+            if(isValidInput(cell)) {
+                valid = true;
+                boolean hadonce = true;
+                if (give.indexOf(cell) == -1) {
+                    played = true;
+                    hadonce = false;
+                    give = give.concat(cell);
+                    int row=cell.charAt(0);int col=cell.charAt(1);
+                    trackingGrid[row][col] = '*';
+                    if(opponentGrid[row][col] == 'S'){
+                        opponentGrid[row][col] = '~';
+                        System.out.println("successfully damaged!");
+                        if(allShipsSunk(opponentGrid));{
+                            System.out.println("the player "+player+"won");
+                            isGameOver();
+                            break;
+                        }
+                    }else{
+                        player1TrackingGrid[row][col] = '!';
+                        System.out.println("oOPS!");
+                        break;
+                    }
+                }
+                if (hadonce){
+                    System.out.println("this cell have being attached once\nplease enter another one!");
+                    continue;
+                }
+            }
+           if (!valid){
+               System.out.println("please enter a valid value!");
+               continue;
+           }
+        }
+        while (!played);
     }
 
     /**
@@ -169,7 +211,7 @@ public class BattleShip {
      */
     static boolean isGameOver() {
         //todo
-        return false;
+        return true;
     }
 
     /**
@@ -179,13 +221,13 @@ public class BattleShip {
      @return true if all ships are sunk, false otherwise.
      */
     static boolean allShipsSunk(char[][] grid) {
+        //done
         for (int i = 0; i < 10 ; i++) {
             for (int j = 0; j < 10 ; j++) {
                 if(grid[i][j] == 'S')
                     return false;
             }
         }
-        //todo
         return true;
     }
 
